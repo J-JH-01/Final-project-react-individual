@@ -47,32 +47,61 @@ margin: 20px 0;
 font-family: "Arial", sans-serif;
 `;
 
+const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const verifyAdmin = async () => {
       try {
-        const queryParams = new URLSearchParams(window.location.search);
-        const token = queryParams.get("token");
-
-        if (token) {
-          setIsAdmin(true);
-        } else {
-          console.log("인증 실패, 메인 페이지로 리다이렉트");
-          window.location.href = "http://modeunticket.store/";
-        }
-      } catch (error) {
+        const params = new URLSearchParams(window.location.search);
+        const stateParam = params.get('state');
         
+        if (!stateParam) {
+          window.location.href = 'http://modeunticket.store/';
+          return;
+        }
+
+        const state = JSON.parse(atob(decodeURIComponent(stateParam)));
+        
+        // 시간 체크 (5분 이내)
+        if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
+          window.location.href = 'http://modeunticket.store/';
+          return;
+        }
+
+        // 관리자 권한 체크
+        const checkResponse = await fetch(
+          `https://43.202.85.129/admin/check?memberEmail=${encodeURIComponent(state.memberEmail)}&memberNo=${encodeURIComponent(state.memberNo)}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${state.token}`
+            }
+          }
+        );
+
+        if (!checkResponse.ok) {
+          throw new Error('관리자 권한 확인 실패');
+        }
+
+        const checkData = await checkResponse.json();
+        
+        if (!checkData.isAdmin) {
+          throw new Error('관리자 권한이 없습니다');
+        }
+
+        setIsAdmin(true);
+        window.adminToken = state.token;
+
+      } catch (error) {
+        console.error('관리자 검증 실패:', error);
+        window.location.href = 'http://modeunticket.store/';
       }
     };
 
     verifyAdmin();
   }, [navigate]);
 
-  if (!isAdmin) {
-    return null;
-  }
+  if (!isAdmin) return null;
 
   return (
     <div className="dash-board-container">
