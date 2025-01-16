@@ -48,55 +48,55 @@ font-family: "Arial", sans-serif;
 `;
 
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      try {
-        console.log("인증 프로세스 시작");
+  // useEffect(() => {
+  //   const verifyAdmin = async () => {
+  //     try {
+  //       console.log("인증 프로세스 시작");
         
-        // 단일 인증 요청으로 변경
-        const response = await axiosApi.post(
-          "/admin/auth",
-          {},  // 페이로드는 빈 객체로 시작
-          {
-            withCredentials: true,
-          }
-        );
+  //       // 단일 인증 요청으로 변경
+  //       const response = await axiosApi.post(
+  //         "/admin/auth",
+  //         {},  // 페이로드는 빈 객체로 시작
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
 
-        console.log("인증 응답:", response);
-        const newAccessToken = response.data.accessToken;
+  //       console.log("인증 응답:", response);
+  //       const newAccessToken = response.data.accessToken;
 
-        if (newAccessToken) {
-          console.log("액세스 토큰 저장");
-          localStorage.setItem("accessToken", newAccessToken);
-          setIsAdmin(true);
-        } else {
-          console.log("인증 실패, 메인 페이지로 리다이렉트");
-          window.location.href = "http://modeunticket.store/";
-        }
-      } catch (error) {
-        console.error("인증 실패 상세:", {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          config: {
-            url: error.config?.url,
-            method: error.config?.method,
-            headers: error.config?.headers,
-            baseURL: error.config?.baseURL
-          }
-        });
-        window.location.href = "http://modeunticket.store/";
-      }
-    };
+  //       if (newAccessToken) {
+  //         console.log("액세스 토큰 저장");
+  //         localStorage.setItem("accessToken", newAccessToken);
+  //         setIsAdmin(true);
+  //       } else {
+  //         console.log("인증 실패, 메인 페이지로 리다이렉트");
+  //         window.location.href = "http://modeunticket.store/";
+  //       }
+  //     } catch (error) {
+  //       console.error("인증 실패 상세:", {
+  //         message: error.message,
+  //         response: error.response?.data,
+  //         status: error.response?.status,
+  //         config: {
+  //           url: error.config?.url,
+  //           method: error.config?.method,
+  //           headers: error.config?.headers,
+  //           baseURL: error.config?.baseURL
+  //         }
+  //       });
+  //       window.location.href = "http://modeunticket.store/";
+  //     }
+  //   };
 
-    verifyAdmin();
-  }, [navigate]);
+  //   verifyAdmin();
+  // }, [navigate]);
 
-  if (!isAdmin) {
-    return null;
-  }
+  // if (!isAdmin) {
+  //   return null;
+  // }
 
   return (
     <div className="dash-board-container">
