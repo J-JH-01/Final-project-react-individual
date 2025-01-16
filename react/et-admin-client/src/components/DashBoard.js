@@ -77,10 +77,15 @@ const [isAdmin, setIsAdmin] = useState(false);
         }
 
         // API 서버에 토큰 확인
-        const response = await fetch(`https://43.202.85.129/admin/check?memberEmail=${encodeURIComponent(state.memberEmail)}&memberNo=${encodeURIComponent(state.memberNo)}`, {
+        const response = await fetch("https://43.202.85.129/admin/auth", {
+          method: "POST",
           headers: {
-            'Authorization': `Bearer ${state.token}`
-          }
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            memberEmail: state.memberEmail,  // state에서 이메일 가져오기
+            memberNo: state.memberNo,        // state에서 회원 번호 가져오기
+          }),
         });
 
         if (!response.ok) {
