@@ -53,48 +53,58 @@ const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     const verifyAdmin = async () => {
       try {
+        // 이미 인증된 상태인지 확인
+        const storedAuth = localStorage.getItem('adminAuth');
+        if (storedAuth) {
+          setIsAdmin(true);
+          return;
+        }
+
         const params = new URLSearchParams(window.location.search);
-        const stateParam = params.get('state');
-        
+        const stateParam = params.get("state");
+
         if (!stateParam) {
-          window.location.href = 'http://modeunticket.store/';
+          window.location.href = "http://modeunticket.store/";
           return;
         }
 
         const state = JSON.parse(atob(decodeURIComponent(stateParam)));
-        
+
         // 시간 체크 (5분 이내)
         if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
-          window.location.href = 'http://modeunticket.store/';
+          window.location.href = "http://modeunticket.store/";
           return;
         }
 
-        // 관리자 권한 체크
-        const checkResponse = await fetch(
-          `https://43.202.85.129/admin/check?memberEmail=${encodeURIComponent(state.memberEmail)}&memberNo=${encodeURIComponent(state.memberNo)}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${state.token}`
-            }
+        // API 서버에 토큰 확인
+        const response = await fetch(`https://43.202.85.129/admin/check?memberEmail=${encodeURIComponent(state.memberEmail)}&memberNo=${encodeURIComponent(state.memberNo)}`, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`
           }
-        );
+        });
 
-        if (!checkResponse.ok) {
+        if (!response.ok) {
           throw new Error('관리자 권한 확인 실패');
         }
 
-        const checkData = await checkResponse.json();
+        const checkData = await response.json();
         
         if (!checkData.isAdmin) {
           throw new Error('관리자 권한이 없습니다');
         }
 
+        // 인증 성공 시 localStorage에 저장
+        localStorage.setItem('adminAuth', 'true');
+        localStorage.setItem('adminToken', state.token);
         setIsAdmin(true);
-        window.adminToken = state.token;
+
+        // state 파라미터 제거하고 URL 정리
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
 
       } catch (error) {
-        console.error('관리자 검증 실패:', error);
-        window.location.href = 'http://modeunticket.store/';
+        console.error("관리자 검증 실패:", error);
+        window.location.href = "http://modeunticket.store/";
       }
     };
 
