@@ -50,54 +50,54 @@ font-family: "Arial", sans-serif;
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      try {
-        // 리프레시 토큰으로 새 액세스 토큰 요청
-        const response = await axiosApi.post(
-          "/admin/refresh",
-          {},
-          {
-            withCredentials: true,
-          }
-        );
+  // useEffect(() => {
+  //   const verifyAdmin = async () => {
+  //     try {
+  //       // 리프레시 토큰으로 새 액세스 토큰 요청
+  //       const response = await axiosApi.post(
+  //         "/admin/refresh",
+  //         {},
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
 
-        const newAccessToken = response.data.accessToken;
+  //       const newAccessToken = response.data.accessToken;
 
-        if (newAccessToken) {
-          localStorage.setItem("accessToken", newAccessToken);
+  //       if (newAccessToken) {
+  //         localStorage.setItem("accessToken", newAccessToken);
 
-          // 토큰에서 이메일 추출
-          const payload = JSON.parse(atob(newAccessToken.split(".")[1]));
+  //         // 토큰에서 이메일 추출
+  //         const payload = JSON.parse(atob(newAccessToken.split(".")[1]));
 
-          // memberEmail로 관리자 권한 확인 API 호출
-          const adminCheckResponse = await axiosApi.get("/admin/check", {
-            params: {
-              memberEmail: payload.memberEmail,
-              memberNo: payload.memberNo,
-            },
-          });
+  //         // memberEmail로 관리자 권한 확인 API 호출
+  //         const adminCheckResponse = await axiosApi.get("/admin/check", {
+  //           params: {
+  //             memberEmail: payload.memberEmail,
+  //             memberNo: payload.memberNo,
+  //           },
+  //         });
 
-          if (adminCheckResponse.data.isAdmin) {
-            setIsAdmin(true);
-          } else {
-            window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
-          }
-        } else {
-          window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
-        }
-      } catch (error) {
-        console.error("인증 실패:", error);
-        window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
-      }
-    };
+  //         if (adminCheckResponse.data.isAdmin) {
+  //           setIsAdmin(true);
+  //         } else {
+  //           window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
+  //         }
+  //       } else {
+  //         window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
+  //       }
+  //     } catch (error) {
+  //       console.error("인증 실패:", error);
+  //       window.location.replace("http://modeunticket.store");; // 43.202.85.129:80으로 이동
+  //     }
+  //   };
 
-    verifyAdmin();
-  }, [navigate]);
+  //   verifyAdmin();
+  // }, [navigate]);
 
-  if (!isAdmin) {
-    return null;
-  }
+  // if (!isAdmin) {
+  //   return null;
+  // }
 
   return (
     <div className="dash-board-container">
