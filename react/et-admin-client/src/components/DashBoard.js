@@ -57,17 +57,13 @@ font-family: "Arial", sans-serif;
         
         // 리프레시 토큰으로 새 액세스 토큰 요청
         console.log("리프레시 토큰 요청 시작");
-        const refreshToken = localStorage.getItem('refreshToken');
         const response = await axiosApi.post(
-            "/admin/refresh",
-            {},
-            {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${refreshToken}`
-                }
-            }
-        );
+          "/admin/refresh",
+          {},
+          {
+              withCredentials: true
+          }
+      );
         console.log("리프레시 토큰 응답:", response);
  
         const newAccessToken = response.data.accessToken;
