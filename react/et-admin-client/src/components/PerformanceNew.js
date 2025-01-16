@@ -493,7 +493,7 @@ const PerformanceForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/performance/insert",
+        "http://43.202.85.129:8081/performance/insert",
         submitData
       );
       console.log(response.data);
