@@ -55,48 +55,25 @@ font-family: "Arial", sans-serif;
       try {
         console.log("인증 프로세스 시작");
         
-        // 리프레시 토큰으로 새 액세스 토큰 요청
-        console.log("리프레시 토큰 요청 시작");
+        // 단일 인증 요청으로 변경
         const response = await axiosApi.post(
-          "/admin/refresh",
-          {},
+          "/admin/auth",
+          {},  // 페이로드는 빈 객체로 시작
           {
-              withCredentials: true
+            withCredentials: true,
           }
-      );
-        console.log("리프레시 토큰 응답:", response);
- 
+        );
+
+        console.log("인증 응답:", response);
         const newAccessToken = response.data.accessToken;
-        console.log("새 액세스 토큰 존재 여부:", !!newAccessToken);
- 
+
         if (newAccessToken) {
+          console.log("액세스 토큰 저장");
           localStorage.setItem("accessToken", newAccessToken);
-          console.log("액세스 토큰 저장됨");
- 
-          // 토큰에서 이메일 추출
-          const payload = JSON.parse(atob(newAccessToken.split(".")[1]));
-          console.log("토큰에서 추출한 페이로드:", payload);
- 
-          // memberEmail로 관리자 권한 확인 API 호출
-          console.log("관리자 권한 확인 요청 시작");
-          const adminCheckResponse = await axiosApi.get("/admin/check", {
-            params: {
-              memberEmail: payload.memberEmail,
-              memberNo: payload.memberNo,
-            },
-          });
-          console.log("관리자 권한 확인 응답:", adminCheckResponse);
- 
-          if (adminCheckResponse.data.isAdmin) {
-            console.log("관리자 권한 확인됨");
-            setIsAdmin(true);
-          } else {
-            console.log("관리자 권한 없음, 리다이렉트");
-            //window.location.href = "http://localhost:80";
-          }
+          setIsAdmin(true);
         } else {
-          console.log("액세스 토큰 없음, 리다이렉트");
-         //window.location.href = "http://localhost:80";
+          console.log("인증 실패, 메인 페이지로 리다이렉트");
+          window.location.href = "http://modeunticket.store/";
         }
       } catch (error) {
         console.error("인증 실패 상세:", {
@@ -110,10 +87,10 @@ font-family: "Arial", sans-serif;
             baseURL: error.config?.baseURL
           }
         });
-        //window.location.href = "http://localhost:80";
+        window.location.href = "http://modeunticket.store/";
       }
     };
- 
+
     verifyAdmin();
   }, [navigate]);
 
