@@ -92,11 +92,11 @@ font-family: "Arial", sans-serif;
             setIsAdmin(true);
           } else {
             console.log("관리자 권한 없음, 리다이렉트");
-            window.location.href = "http://localhost:80";
+            //window.location.href = "http://localhost:80";
           }
         } else {
           console.log("액세스 토큰 없음, 리다이렉트");
-          window.location.href = "http://localhost:80";
+         //window.location.href = "http://localhost:80";
         }
       } catch (error) {
         console.error("인증 실패 상세:", {
@@ -110,7 +110,7 @@ font-family: "Arial", sans-serif;
             baseURL: error.config?.baseURL
           }
         });
-        window.location.href = "http://localhost:80";
+        //window.location.href = "http://localhost:80";
       }
     };
  
