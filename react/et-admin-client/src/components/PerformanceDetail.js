@@ -332,35 +332,6 @@ const PerformanceForm = () => {
         .catch((error) => {
           console.error("API 호출 에러:", error);
         });
-
-      // 등급 정보 로드
-      axios.get(`https://adminmodeunticket.store/performance/grade/${mt10ID}`)
-      .then((response) => {
-        const gradeData = response.data;
-        console.log(gradeData);
-        console.log(response.data[0])
-        if (gradeData && gradeData.length > 0) {
-          setShowGrades(true);  // 등급 섹션 표시
-    
-          // 객체로 매핑된 좌석 수 데이터 생성
-          const seatsData = {};
-          gradeData.forEach(item => {
-            seatsData[item.gradeId] = parseInt(item.seatCount);
-          });
-          setGradeSeats(seatsData);
-    
-          // 등급 이름 목록 생성
-          const selectedGradeNames = gradeData.map(item => 
-            // gradeId가 1부터 시작하므로 -1 해서 인덱스 맞춤
-            GRADE_ORDER[item.gradeId - 1]
-          ).sort((a, b) => GRADE_ORDER.indexOf(a) - GRADE_ORDER.indexOf(b));
-          
-          setSelectedGrades(selectedGradeNames);
-        }
-      })
-      .catch((error) => {
-        console.error("등급 정보 로드 에러:", error);
-      });
     }
   }, [mt10ID]);
 
