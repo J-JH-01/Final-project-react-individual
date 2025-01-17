@@ -46,73 +46,85 @@ font-family: "Arial", sans-serif;
 `;
 
 const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      try {
-        // 이미 인증된 상태인지 확인
-        const storedAuth = localStorage.getItem('adminAuth');
-        if (storedAuth) {
-          setIsAdmin(true);
-          return;
-        }
-
-        const params = new URLSearchParams(window.location.search);
-        const stateParam = params.get("state");
-
-        if (!stateParam) {
-          window.location.href = "http://modeunticket.store/";
-          return;
-        }
-
-        const state = JSON.parse(atob(decodeURIComponent(stateParam)));
-
-        // 시간 체크 (5분 이내)
-        if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
-          window.location.href = "http://modeunticket.store/";
-          return;
-        }
-
-        // API 서버에 토큰 확인
-        const response = await fetch("https://43.202.85.129/admin/auth", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            memberEmail: state.memberEmail,  // state에서 이메일 가져오기
-            memberNo: state.memberNo,        // state에서 회원 번호 가져오기
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('관리자 권한 확인 실패');
-        }
-
-        const checkData = await response.json();
-        
-        if (!checkData.isAdmin) {
-          throw new Error('관리자 권한이 없습니다');
-        }
-
-        // 인증 성공 시 localStorage에 저장
-        localStorage.setItem('adminAuth', 'true');
-        localStorage.setItem('adminToken', state.token);
+useEffect(() => {
+  const verifyAdmin = async () => {
+    try {
+      // 이미 인증된 상태인지 확인
+      const storedAuth = localStorage.getItem('adminAuth');
+      if (storedAuth) {
         setIsAdmin(true);
-
-        // state 파라미터 제거하고 URL 정리
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-
-      } catch (error) {
-        console.error("관리자 검증 실패:", error);
-        //window.location.href = "http://modeunticket.store/";
+        return;
       }
-    };
 
-    verifyAdmin();
-  }, [navigate]);
+      const params = new URLSearchParams(window.location.search);
+      const stateParam = params.get("state");
+      
+      if (!stateParam) {
+        window.location.href = "http://modeunticket.store/";
+        return;
+      }
+
+      const state = JSON.parse(atob(decodeURIComponent(stateParam)));
+
+      if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
+        window.location.href = "http://modeunticket.store/";
+        return;
+      }
+
+      console.log('Sending request with:', {
+        memberEmail: state.memberEmail,
+        memberNo: state.memberNo
+      });
+
+      const response = await fetch("https://43.202.85.129/admin/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        credentials: 'include',
+        mode: 'cors',
+        body: JSON.stringify({
+          memberEmail: state.memberEmail,
+          memberNo: state.memberNo
+        })
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries([...response.headers]));
+
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+
+      const checkData = responseText ? JSON.parse(responseText) : {};
+      console.log('Parsed response:', checkData);
+
+      if (!checkData.accessToken) {
+        throw new Error('액세스 토큰이 없습니다');
+      }
+
+      localStorage.setItem('adminAuth', 'true');
+      localStorage.setItem('adminToken', checkData.accessToken); // state.token 대신 실제 받은 토큰 사용
+      setIsAdmin(true);
+
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+
+    } catch (error) {
+      console.error("관리자 검증 실패. 전체 에러:", error);
+      console.error("에러 상세 정보:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      //window.location.href = "http://modeunticket.store/";
+    }
+  };
+
+  verifyAdmin();
+}, [navigate]);
 
   if (!isAdmin) return null;
 
