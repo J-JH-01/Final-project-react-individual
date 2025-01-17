@@ -723,11 +723,6 @@ const submitData = {
                     value={formData.SEATSCALE}
                     onChange={handleChange}
                     min="1"
-                    onKeyPress={(e) => {
-                      if (!/[0-9]/.test(e.key)) {
-                        e.preventDefault();
-                      }
-                    }}
                     required
                   />
                 </div>
