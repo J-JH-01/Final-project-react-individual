@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
 import { axiosApi } from './../api/axoisAPI';
+import { useNavigate } from "react-router-dom";
 
 // Animation keyframes
 const slideDown = keyframes`
@@ -250,6 +251,7 @@ const PerformanceForm = () => {
   // Refs
   const container = useRef(null);
   const mapInstanceRef = useRef(null);
+  
 
   // States
   const [formData, setFormData] = useState({
@@ -313,49 +315,49 @@ const PerformanceForm = () => {
   }, []);
 
   useEffect(() => {
-    const totalSeats = parseInt(formData.SEATSCALE) || 0;
-
-    // 객석수가 0이거나 비어있으면 등급지정 관련 상태 초기화
-    if (!totalSeats) {
+    if (!formData.SEATSCALE || parseInt(formData.SEATSCALE) <= 0) {
+      // 객석수가 비어있거나 0 이하일 때는 등급 관련 상태만 초기화
       setShowGrades(false);
       setSelectedGrades([]);
       setGradeSeats({});
       return;
     }
-
+  
+    // 객석수가 있을 때만 유효성 검사 진행
+    if (showGrades && selectedGrades.length > 0) {
+      const totalSeats = parseInt(formData.SEATSCALE);
+      const totalGradeSeats = Object.values(gradeSeats).reduce(
+        (sum, val) => sum + (parseInt(val) || 0),
+        0
+      );
+  
+      if (totalGradeSeats > totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`);
+      } else if (totalGradeSeats < totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`);
+      } else {
+        setSeatError("");
+      }
+    }
+  }, [formData.SEATSCALE]); // 객석수 변경시에만 실행
+  
+  // 등급 좌석 검사를 위한 별도의 useEffect
+  useEffect(() => {
     if (showGrades && selectedGrades.length > 0) {
       const invalidSeats = selectedGrades.some((grade) => {
         const seatCount = gradeSeats[GRADE_MAPPING[grade]];
         return !seatCount || parseInt(seatCount) < 1;
       });
-
+  
       if (invalidSeats) {
         setSelectedGradeError("좌석 수는 1 이상 입력해주세요.");
       } else {
         setSelectedGradeError("");
-
-        const totalGradeSeats = Object.values(gradeSeats).reduce(
-          (sum, val) => sum + (parseInt(val) || 0),
-          0
-        );
-
-        if (totalGradeSeats > totalSeats) {
-          setSeatError(
-            `총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`
-          );
-        } else if (totalGradeSeats < totalSeats) {
-          setSeatError(
-            `총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`
-          );
-        } else {
-          setSeatError("");
-        }
       }
     } else {
       setSelectedGradeError("");
-      setSeatError("");
     }
-  }, [gradeSeats, selectedGrades, formData.SEATSCALE, showGrades]);
+  }, [gradeSeats, selectedGrades, showGrades]);
 
   useEffect(() => {
     const loadMap = () => {
