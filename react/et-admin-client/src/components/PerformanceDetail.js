@@ -590,11 +590,31 @@ const PerformanceForm = () => {
   const handleGradeSeatChange = (grade, value) => {
     const gradeId = GRADE_MAPPING[grade];
     const newValue = value === "" ? "" : parseInt(value);
-
-    setGradeSeats((prev) => ({
-      ...prev,
-      [gradeId]: newValue,
-    }));
+  
+    setGradeSeats((prev) => {
+      const newSeats = {
+        ...prev,
+        [gradeId]: newValue
+      };
+  
+      // 새로운 좌석 총합 계산
+      const totalSeats = parseInt(formData.SEATSCALE);
+      const newTotalGradeSeats = Object.values(newSeats).reduce(
+        (sum, val) => sum + (parseInt(val) || 0),
+        0
+      );
+  
+      // 좌석 수 검증
+      if (newTotalGradeSeats > totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})보다 등급별 좌석 합계(${newTotalGradeSeats})가 많습니다.`);
+      } else if (newTotalGradeSeats < totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})와 등급별 좌석 합계(${newTotalGradeSeats})가 일치하지 않습니다.`);
+      } else {
+        setSeatError("");
+      }
+  
+      return newSeats;
+    });
   };
 
   const handleInputChange = (e) => {
