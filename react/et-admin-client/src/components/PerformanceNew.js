@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
-import { axiosApi } from './../api/axoisAPI';
+import { axiosApi } from "./../api/axoisAPI";
 import { useNavigate } from "react-router-dom";
 
 // Animation keyframes
@@ -251,7 +251,6 @@ const PerformanceForm = () => {
   // Refs
   const container = useRef(null);
   const mapInstanceRef = useRef(null);
-  
 
   // States
   const [formData, setFormData] = useState({
@@ -322,7 +321,7 @@ const PerformanceForm = () => {
       setGradeSeats({});
       return;
     }
-  
+
     // 객석수가 있을 때만 유효성 검사 진행
     if (showGrades && selectedGrades.length > 0) {
       const totalSeats = parseInt(formData.SEATSCALE);
@@ -330,17 +329,21 @@ const PerformanceForm = () => {
         (sum, val) => sum + (parseInt(val) || 0),
         0
       );
-  
+
       if (totalGradeSeats > totalSeats) {
-        setSeatError(`총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`);
+        setSeatError(
+          `총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`
+        );
       } else if (totalGradeSeats < totalSeats) {
-        setSeatError(`총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`);
+        setSeatError(
+          `총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`
+        );
       } else {
         setSeatError("");
       }
     }
   }, [formData.SEATSCALE]); // 객석수 변경시에만 실행
-  
+
   // 등급 좌석 검사를 위한 별도의 useEffect
   useEffect(() => {
     if (showGrades && selectedGrades.length > 0) {
@@ -348,7 +351,7 @@ const PerformanceForm = () => {
         const seatCount = gradeSeats[GRADE_MAPPING[grade]];
         return !seatCount || parseInt(seatCount) < 1;
       });
-  
+
       if (invalidSeats) {
         setSelectedGradeError("좌석 수는 1 이상 입력해주세요.");
       } else {
@@ -377,27 +380,27 @@ const PerformanceForm = () => {
   }, []);
 
   // useEffect를 추가해주세요 (loadMap useEffect 바로 위에)
-useEffect(() => {
-  // Cleanup function
-  return () => {
-    setFormData({
-      MT10ID: "",
-      FCLTYNM: "",
-      MT13CNT: "",
-      FCLTYCHARTR: "공공(문예회관)",
-      OPENDE: "",
-      SEATSCALE: "",
-      TELNO: "",
-      RELATEURL: "",
-      ADRES: "",
-      FCLTLA: "",
-      FCLTLO: "",
-    });
-    setShowGrades(false);
-    setSelectedGrades([]);
-    setGradeSeats({});
-  };
-}, []);
+  useEffect(() => {
+    // Cleanup function
+    return () => {
+      setFormData({
+        MT10ID: "",
+        FCLTYNM: "",
+        MT13CNT: "",
+        FCLTYCHARTR: "공공(문예회관)",
+        OPENDE: "",
+        SEATSCALE: "",
+        TELNO: "",
+        RELATEURL: "",
+        ADRES: "",
+        FCLTLA: "",
+        FCLTLO: "",
+      });
+      setShowGrades(false);
+      setSelectedGrades([]);
+      setGradeSeats({});
+    };
+  }, []);
 
   // Validation functions
   const validateLocation = () => {
@@ -459,14 +462,14 @@ useEffect(() => {
   // Event handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "SEATSCALE") {
       const numValue = parseInt(value);
       // 빈 문자열이거나 0, 음수인 경우
       if (value === "" || numValue <= 0) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          [name]: ""
+          [name]: "",
         }));
         setShowGrades(false);
         setSelectedGrades([]);
@@ -474,10 +477,10 @@ useEffect(() => {
         return;
       }
     }
-  
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // 객석수가 비어있거나 0인 경우 등급지정 관련 상태 초기화
@@ -490,9 +493,9 @@ useEffect(() => {
       }
       // 음수나 0이 입력되었을 경우 값을 비움
       if (numValue <= 0) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          [name]: ""
+          [name]: "",
         }));
         return;
       }
@@ -536,7 +539,6 @@ useEffect(() => {
         "https://adminmodeunticket.store/performance/insert",
         submitData
       );
-      console.log(response.data);
       if (response.data > 0) {
         alert("시설 정보가 성공적으로 등록되었습니다.");
         window.history.back();
@@ -643,7 +645,7 @@ useEffect(() => {
               />
               {idError && <ErrorText>{idError}</ErrorText>}
             </FormGroup>
-            
+
             <FormGroup>
               <Label>공연장명:</Label>
               <Input
@@ -706,7 +708,9 @@ useEffect(() => {
                     type="checkbox"
                     id="showGrades"
                     checked={showGrades}
-                    disabled={!formData.SEATSCALE || parseInt(formData.SEATSCALE) === 0}
+                    disabled={
+                      !formData.SEATSCALE || parseInt(formData.SEATSCALE) === 0
+                    }
                     onChange={(e) => setShowGrades(e.target.checked)}
                   />
                   <label htmlFor="showGrades">등급지정</label>

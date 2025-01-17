@@ -183,7 +183,6 @@ const MemberUpdate = () => {
     axios
       .get(`https://adminmodeunticket.store/member/${memberNo}`)
       .then((response) => {
-        console.log("API 응답 데이터:", response.data);
         const memberData = response.data[0];
         setFormData({
           nickname: memberData.memberNickname || "",
@@ -249,7 +248,10 @@ const MemberUpdate = () => {
     };
 
     axios
-      .post(`https://adminmodeunticket.store/member/update/${memberNo}`, formdata)
+      .post(
+        `https://adminmodeunticket.store/member/update/${memberNo}`,
+        formdata
+      )
       .then((response) => {
         if (response.data > 0) {
           alert("회원 정보가 수정되었습니다");

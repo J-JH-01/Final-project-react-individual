@@ -49,8 +49,8 @@ export default function DashBoard() {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      const storedAdminAuth = localStorage.getItem('adminAuth');
-      const storedAdminToken = localStorage.getItem('adminToken');
+      const storedAdminAuth = localStorage.getItem("adminAuth");
+      const storedAdminToken = localStorage.getItem("adminToken");
 
       // 인증 정보가 있으면 바로 인증 상태를 유지
       if (storedAdminAuth && storedAdminToken) {
@@ -71,46 +71,48 @@ export default function DashBoard() {
         const state = JSON.parse(atob(decodeURIComponent(stateParam)));
 
         if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
-          localStorage.removeItem('adminAuth');
-          localStorage.removeItem('adminToken');
+          localStorage.removeItem("adminAuth");
+          localStorage.removeItem("adminToken");
           window.location.href = "http://modeunticket.store/";
           return;
         }
 
         // API 호출로 관리자 권한 확인
-        const response = await fetch("https://adminmodeunticket.store/admin/auth", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"  // 명시적으로 JSON 응답 요청
-          },
-          body: JSON.stringify({
-            memberEmail: state.memberEmail,
-            memberNo: state.memberNo
-          })
-        });
+        const response = await fetch(
+          "https://adminmodeunticket.store/admin/auth",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json", // 명시적으로 JSON 응답 요청
+            },
+            body: JSON.stringify({
+              memberEmail: state.memberEmail,
+              memberNo: state.memberNo,
+            }),
+          }
+        );
 
         const checkData = await response.json();
 
         if (!response.ok) {
-          throw new Error(checkData.message || '관리자 권한 확인 실패');
+          throw new Error(checkData.message || "관리자 권한 확인 실패");
         }
 
         if (!checkData.accessToken) {
-          throw new Error('인증 토큰이 없습니다');
+          throw new Error("인증 토큰이 없습니다");
         }
 
-        localStorage.setItem('adminAuth', 'true');
-        localStorage.setItem('adminToken', checkData.accessToken);
+        localStorage.setItem("adminAuth", "true");
+        localStorage.setItem("adminToken", checkData.accessToken);
         setIsAdmin(true);
 
         const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-
+        window.history.replaceState({}, "", newUrl);
       } catch (error) {
         console.error("관리자 검증 실패. 전체 에러:", error);
-        localStorage.removeItem('adminAuth');
-        localStorage.removeItem('adminToken');
+        localStorage.removeItem("adminAuth");
+        localStorage.removeItem("adminToken");
         //window.location.href = "http://modeunticket.store/";
       } finally {
         setIsLoading(false);
@@ -118,7 +120,7 @@ export default function DashBoard() {
     };
 
     checkAdminStatus();
-  }, []);  // 빈 배열을 넣으면 컴포넌트가 처음 마운트될 때만 실행됨
+  }, []); // 빈 배열을 넣으면 컴포넌트가 처음 마운트될 때만 실행됨
 
   if (isLoading) return <div>Loading...</div>;
   if (!isAdmin) return null;
