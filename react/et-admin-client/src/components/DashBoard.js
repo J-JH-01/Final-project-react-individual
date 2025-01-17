@@ -46,77 +46,62 @@ font-family: "Arial", sans-serif;
 `;
 
 const [isAdmin, setIsAdmin] = useState(false);
-const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+const [isLoading, setIsLoading] = useState(true);
 const navigate = useNavigate();
 
 useEffect(() => {
   const verifyAdmin = async () => {
     try {
-      // 1. localStorage 체크
-      const storedAuth = localStorage.getItem('adminAuth');
-      const storedToken = localStorage.getItem('adminToken');
-      
-      // URL 파라미터 확인
       const params = new URLSearchParams(window.location.search);
       const stateParam = params.get("state");
       
-      // 2. state 파라미터가 없는 경우
+      // state 파라미터가 없으면 메인으로 리다이렉트
       if (!stateParam) {
-        // 저장된 인증 정보도 없으면 메인으로 리다이렉트
-        if (!storedAuth || !storedToken) {
-          window.location.href = "http://modeunticket.store/";
-          return;
-        }
-        // 저장된 인증 정보가 있으면 토큰 유효성 검증 필요
-        // TODO: 토큰 유효성 검증 API 호출
+        window.location.href = "http://modeunticket.store/";
+        return;
       }
 
-      // 3. state 파라미터가 있는 경우 처리
-      if (stateParam) {
-        const state = JSON.parse(atob(decodeURIComponent(stateParam)));
-        
-        // 타임스탬프 검증
-        if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
-          localStorage.removeItem('adminAuth');
-          localStorage.removeItem('adminToken');
-          window.location.href = "http://modeunticket.store/";
-          return;
-        }
-
-        // API 호출로 관리자 권한 확인
-        const response = await fetch("https://43.202.85.129/admin/auth", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            memberEmail: state.memberEmail,
-            memberNo: state.memberNo
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('관리자 권한 확인 실패');
-        }
-
-        const checkData = await response.json();
-        
-        if (!checkData.accessToken) {
-          throw new Error('인증 토큰이 없습니다');
-        }
-
-        // 인증 성공 시 저장
-        localStorage.setItem('adminAuth', 'true');
-        localStorage.setItem('adminToken', checkData.accessToken);
-        
-        // URL에서 state 파라미터 제거
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-      }
-
-      setIsAdmin(true);
+      const state = JSON.parse(atob(decodeURIComponent(stateParam)));
       
+      // 타임스탬프 검증
+      if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
+        localStorage.removeItem('adminAuth');
+        localStorage.removeItem('adminToken');
+        window.location.href = "http://modeunticket.store/";
+        return;
+      }
+
+      // API 호출로 관리자 권한 확인
+      const response = await fetch("https://43.202.85.129/admin/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          memberEmail: state.memberEmail,
+          memberNo: state.memberNo
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('관리자 권한 확인 실패');
+      }
+
+      const checkData = await response.json();
+      
+      if (!checkData.accessToken) {
+        throw new Error('인증 토큰이 없습니다');
+      }
+
+      // 인증 성공 시에만 localStorage 설정
+      localStorage.setItem('adminAuth', 'true');
+      localStorage.setItem('adminToken', checkData.accessToken);
+      setIsAdmin(true);
+
+      // URL에서 state 파라미터 제거
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+
     } catch (error) {
       console.error("관리자 검증 실패:", error);
       localStorage.removeItem('adminAuth');
@@ -130,7 +115,6 @@ useEffect(() => {
   verifyAdmin();
 }, [navigate]);
 
-// 로딩 중이거나 관리자가 아닌 경우 렌더링하지 않음
 if (isLoading) return <div>Loading...</div>;
 if (!isAdmin) return null;
 
