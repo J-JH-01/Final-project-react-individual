@@ -21,8 +21,6 @@ import { axiosApi } from "../api/axoisAPI";
 import { NavLink, Route, Routes } from "react-router";
 import ManagerEnrollDetail from "./ManagerEnrollDetail.js";
 
-// 일단은 이렇게 주석이라도 달아봐야지
-
 // react-router-dom 이용한 라우팅 방법
 // react-router-dom : React 애플리케이션에서 라우팅을 구현하기 위해 사용하는 라이브러리
 // 라우팅(router) : 사용자가 요청한 URL 경로에 따라 적절한 페이지 or 리소스 제공하는 과정
