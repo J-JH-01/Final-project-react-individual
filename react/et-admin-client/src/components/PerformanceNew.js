@@ -374,6 +374,29 @@ const PerformanceForm = () => {
     loadMap();
   }, []);
 
+  // useEffect를 추가해주세요 (loadMap useEffect 바로 위에)
+useEffect(() => {
+  // Cleanup function
+  return () => {
+    setFormData({
+      MT10ID: "",
+      FCLTYNM: "",
+      MT13CNT: "",
+      FCLTYCHARTR: "공공(문예회관)",
+      OPENDE: "",
+      SEATSCALE: "",
+      TELNO: "",
+      RELATEURL: "",
+      ADRES: "",
+      FCLTLA: "",
+      FCLTLO: "",
+    });
+    setShowGrades(false);
+    setSelectedGrades([]);
+    setGradeSeats({});
+  };
+}, []);
+
   // Validation functions
   const validateLocation = () => {
     if (!formData.ADRES || !formData.FCLTLA || !formData.FCLTLO) {
@@ -434,10 +457,25 @@ const PerformanceForm = () => {
   // Event handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
+  
+    if (name === "SEATSCALE") {
+      const numValue = parseInt(value);
+      // 빈 문자열이거나 0, 음수인 경우
+      if (value === "" || numValue <= 0) {
+        setFormData(prev => ({
+          ...prev,
+          [name]: ""
+        }));
+        setShowGrades(false);
+        setSelectedGrades([]);
+        setGradeSeats({});
+        return;
+      }
+    }
+  
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
 
     // 객석수가 비어있거나 0인 경우 등급지정 관련 상태 초기화
