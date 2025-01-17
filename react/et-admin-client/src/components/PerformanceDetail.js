@@ -552,15 +552,35 @@ const PerformanceForm = () => {
 
   const handleGradeChange = (grade) => {
     setSelectedGrades((prev) => {
+      // 등급 제거하는 경우
       if (prev.includes(grade)) {
         const newGrades = prev.filter((g) => g !== grade);
+        
+        // 등급 제거 시 해당 좌석수도 함께 제거
         setGradeSeats((seats) => {
           const newSeats = { ...seats };
           delete newSeats[GRADE_MAPPING[grade]];
+          
+          // 새로운 좌석 총합 계산
+          const totalSeats = parseInt(formData.SEATSCALE);
+          const newTotalGradeSeats = Object.values(newSeats).reduce(
+            (sum, val) => sum + (parseInt(val) || 0),
+            0
+          );
+  
+          // 좌석 수 검증
+          if (newTotalGradeSeats !== totalSeats) {
+            setSeatError(`총 객석수(${totalSeats})와 등급별 좌석 합계(${newTotalGradeSeats})가 일치하지 않습니다.`);
+          } else {
+            setSeatError("");
+          }
+          
           return newSeats;
         });
         return newGrades;
       }
+      
+      // 등급 추가하는 경우
       return [...prev, grade].sort(
         (a, b) => GRADE_ORDER.indexOf(a) - GRADE_ORDER.indexOf(b)
       );
