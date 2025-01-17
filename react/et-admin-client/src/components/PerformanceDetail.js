@@ -401,48 +401,49 @@ const PerformanceForm = () => {
 
   // 등급별 좌석 수 검증
   useEffect(() => {
-    // 객석수가 없거나 0 이하인 경우 등급지정 불가
     if (!formData.SEATSCALE || parseInt(formData.SEATSCALE) <= 0) {
+      // 객석수가 비어있거나 0 이하일 때는 등급 관련 상태만 초기화
       setShowGrades(false);
       setSelectedGrades([]);
       setGradeSeats({});
       return;
     }
-
+  
+    // 객석수가 있을 때만 유효성 검사 진행
+    if (showGrades && selectedGrades.length > 0) {
+      const totalSeats = parseInt(formData.SEATSCALE);
+      const totalGradeSeats = Object.values(gradeSeats).reduce(
+        (sum, val) => sum + (parseInt(val) || 0),
+        0
+      );
+  
+      if (totalGradeSeats > totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`);
+      } else if (totalGradeSeats < totalSeats) {
+        setSeatError(`총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`);
+      } else {
+        setSeatError("");
+      }
+    }
+  }, [formData.SEATSCALE]); // 객석수 변경시에만 실행
+  
+  // 등급 좌석 검사를 위한 별도의 useEffect
+  useEffect(() => {
     if (showGrades && selectedGrades.length > 0) {
       const invalidSeats = selectedGrades.some((grade) => {
         const seatCount = gradeSeats[GRADE_MAPPING[grade]];
         return !seatCount || parseInt(seatCount) < 1;
       });
-
+  
       if (invalidSeats) {
         setSelectedGradeError("좌석 수는 1 이상 입력해주세요.");
       } else {
         setSelectedGradeError("");
-
-        const totalGradeSeats = Object.values(gradeSeats).reduce(
-          (sum, val) => sum + (parseInt(val) || 0),
-          0
-        );
-        const totalSeats = parseInt(formData.SEATSCALE) || 0;
-
-        if (totalGradeSeats > totalSeats) {
-          setSeatError(
-            `총 객석수(${totalSeats})보다 등급별 좌석 합계(${totalGradeSeats})가 많습니다.`
-          );
-        } else if (totalGradeSeats < totalSeats) {
-          setSeatError(
-            `총 객석수(${totalSeats})와 등급별 좌석 합계(${totalGradeSeats})가 일치하지 않습니다.`
-          );
-        } else {
-          setSeatError("");
-        }
       }
     } else {
       setSelectedGradeError("");
-      setSeatError("");
     }
-  }, [gradeSeats, selectedGrades, formData.SEATSCALE, showGrades]);
+  }, [gradeSeats, selectedGrades, showGrades]);
 
   // 지도 초기화
   useEffect(() => {
