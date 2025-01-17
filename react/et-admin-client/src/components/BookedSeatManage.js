@@ -246,6 +246,7 @@ const PerformanceList = () => {
         setCurrentPage(1);
         setInputValue('');
         setSelectedValue('제목');
+        setSearchParams({}); // 쿼리스트링 초기화 추가
       }}>
         <h4>예매좌석관리</h4>
       </TitleContainer>

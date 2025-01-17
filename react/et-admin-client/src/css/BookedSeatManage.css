@@ -1,16 +1,18 @@
 /* BookedSeatManage.css */
 .performance-container {
-	text-align: -webkit-center;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
+	width: 100%; /* 추가 */
+    text-align: -webkit-center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .performance-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr); /* 5열에서 3열로 변경 */
-	gap: 30px; /* 간격 증가 */
-	margin-bottom: 30px;
+	width: 100%; /* 추가 */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
 }
 
 .performance-item {
