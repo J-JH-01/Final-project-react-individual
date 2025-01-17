@@ -63,50 +63,47 @@ export default function DashBoard() {
 
         // 타임스탬프 검증
         if (new Date().getTime() - state.timestamp > 5 * 60 * 1000) {
-          localStorage.removeItem("adminAuth");
-          localStorage.removeItem("adminToken");
+          localStorage.removeItem('adminAuth');
+          localStorage.removeItem('adminToken');
           window.location.href = "http://modeunticket.store/";
           return;
         }
-
+      
         // API 호출로 관리자 권한 확인
-        const response = await fetch(
-          "https://adminmodeunticket.store/admin/auth",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              memberEmail: state.memberEmail,
-              memberNo: state.memberNo,
-            }),
-          }
-        );
-
-        // if (!response.ok) {
-        //   throw new Error('관리자 권한 확인 실패');
-        // }
-
-        const checkData = await response.json();
-
-        // isAdmin 확인 추가
-        if (!checkData.isAdmin) {
-          throw new Error(checkData.message || "관리자 권한이 없습니다");
+        const response = await fetch("https://adminmodeunticket.store/admin/auth", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"  // 명시적으로 JSON 응답 요청
+          },
+          body: JSON.stringify({
+            memberEmail: state.memberEmail,
+            memberNo: state.memberNo
+          })
+        });
+      
+        // 응답 내용 로깅
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+      
+        // 응답이 비어있지 않은 경우에만 JSON 파싱 시도
+        const checkData = responseText ? JSON.parse(responseText) : {};
+        console.log('Parsed response:', checkData);
+      
+        if (!response.ok) {
+          throw new Error(checkData.message || '관리자 권한 확인 실패');
         }
-
+      
         if (!checkData.accessToken) {
-          throw new Error("인증 토큰이 없습니다");
+          throw new Error('인증 토큰이 없습니다');
         }
-
-        // 인증 성공 시 localStorage 설정
-        localStorage.setItem("adminAuth", "true");
-        localStorage.setItem("adminToken", checkData.accessToken);
+      
+        localStorage.setItem('adminAuth', 'true');
+        localStorage.setItem('adminToken', checkData.accessToken);
         setIsAdmin(true);
-
-        // URL에서 state 파라미터 제거
+      
         const newUrl = window.location.pathname;
-        window.history.replaceState({}, "", newUrl);
+        window.history.replaceState({}, '', newUrl);
       } catch (error) {
         console.error("관리자 검증 실패:", error);
         localStorage.removeItem("adminAuth");
