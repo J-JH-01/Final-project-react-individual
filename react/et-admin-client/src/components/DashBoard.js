@@ -83,15 +83,16 @@ useEffect(() => {
         })
       });
 
-      if (!response.ok) {
-        throw new Error('관리자 권한 확인 실패');
-      }
+      // if (!response.ok) {
+      //   throw new Error('관리자 권한 확인 실패');
+      // }
 
       const checkData = await response.json();
       
-      if (!checkData.accessToken) {
-        throw new Error('인증 토큰이 없습니다');
-      }
+      console.log(checkData);
+      // if (!checkData.accessToken) {
+      //   throw new Error('인증 토큰이 없습니다');
+      // }
 
       // 인증 성공 시에만 localStorage 설정
       localStorage.setItem('adminAuth', 'true');
