@@ -56,10 +56,10 @@ useEffect(() => {
       const stateParam = params.get("state");
       
       // state 파라미터가 없으면 메인으로 리다이렉트
-      if (!stateParam) {
-        window.location.href = "http://modeunticket.store/";
-        return;
-      }
+      // if (!stateParam) {
+      //   window.location.href = "http://modeunticket.store/";
+      //   return;
+      // }
 
       const state = JSON.parse(atob(decodeURIComponent(stateParam)));
       
