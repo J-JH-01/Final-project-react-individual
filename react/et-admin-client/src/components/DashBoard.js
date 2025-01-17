@@ -106,7 +106,7 @@ useEffect(() => {
       console.error("관리자 검증 실패:", error);
       localStorage.removeItem('adminAuth');
       localStorage.removeItem('adminToken');
-      //window.location.href = "http://modeunticket.store/";
+      window.location.href = "http://modeunticket.store/";
     } finally {
       setIsLoading(false);
     }

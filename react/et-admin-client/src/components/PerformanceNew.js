@@ -493,7 +493,7 @@ const PerformanceForm = () => {
 
     try {
       const response = await axios.post(
-        "https://43.202.85.129/performance/insert",
+        "https://adminmodeunticket.store/performance/insert",
         submitData
       );
       console.log(response.data);
