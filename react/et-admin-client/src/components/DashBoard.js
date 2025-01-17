@@ -109,7 +109,7 @@ const [isAdmin, setIsAdmin] = useState(false);
 
       } catch (error) {
         console.error("관리자 검증 실패:", error);
-        window.location.href = "http://modeunticket.store/";
+        //window.location.href = "http://modeunticket.store/";
       }
     };
 
