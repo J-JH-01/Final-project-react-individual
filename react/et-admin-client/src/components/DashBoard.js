@@ -72,7 +72,7 @@ useEffect(() => {
       }
 
       // API 호출로 관리자 권한 확인
-      const response = await fetch("https://43.202.85.129/admin/auth", {
+      const response = await fetch("https://adminmodeunticket.store/admin/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
