@@ -37,7 +37,7 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: white;
   font-size: 2rem;
-  padding: 15px 50px;  // 패딩값 증가
+  padding: 15px 20px;  // 패딩값 증가
   border-radius: 4px;
   transition: transform 0.3s ease;
 
@@ -56,8 +56,8 @@ const BackButton = styled.a`
   padding: 6px;
   border-radius: 4px;
   transition: background-color 0.2s;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
 
   &:hover {
     background-color: #357ABD;
