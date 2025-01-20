@@ -37,10 +37,26 @@ export default function DashBoard() {
     }
   `;
 
-  const Title = styled.h1`
-    text-align: center;
+  const Title = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin: 20px 0;
-    font-family: "Arial", sans-serif;
+    padding: 0 20px;
+  `;
+
+  const BackButton = styled.a`
+    text-decoration: none;
+    background-color: #e6f3ff;
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #cce7ff;
+    }
   `;
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -129,6 +145,7 @@ export default function DashBoard() {
     <div className="dash-board-container">
       <Title className="dash-board-title">
         <StyledNavLink to="/">관리자 페이지</StyledNavLink>
+        <BackButton href="http://modeunticket.store/">되돌아가기</BackButton>
       </Title>
 
       <div className="main-show-container">
