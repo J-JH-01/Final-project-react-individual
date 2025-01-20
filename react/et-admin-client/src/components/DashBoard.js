@@ -19,7 +19,6 @@ import MainPage from "./MainPage.js";
 import styled, { keyframes } from "styled-components";
 import { NavLink, Route, Routes } from "react-router";
 import ManagerEnrollDetail from "./ManagerEnrollDetail.js";
-import { Home } from "lucide-react";
 
 // react-router-dom 이용한 라우팅 방법
 // react-router-dom : React 애플리케이션에서 라우팅을 구현하기 위해 사용하는 라이브러리
