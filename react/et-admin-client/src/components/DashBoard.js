@@ -17,26 +17,15 @@ import InquiryManage from "./InquiryManage.js";
 import InquiryDetail from "./InquiryDetail.js";
 import MainPage from "./MainPage.js";
 import styled, { keyframes } from "styled-components";
-import { axiosApi } from "../api/axoisAPI";
 import { NavLink, Route, Routes } from "react-router";
 import ManagerEnrollDetail from "./ManagerEnrollDetail.js";
+import { Home } from "lucide-react";
 
 // react-router-dom 이용한 라우팅 방법
 // react-router-dom : React 애플리케이션에서 라우팅을 구현하기 위해 사용하는 라이브러리
 // 라우팅(router) : 사용자가 요청한 URL 경로에 따라 적절한 페이지 or 리소스 제공하는 과정
 export default function DashBoard() {
   // 스타일드 컴포넌트 정의
-  const StyledNavLink = styled(NavLink)`
-    text-decoration: none;
-    color: inherit;
-    font-size: 2rem;
-    transition: transform 0.3s ease; /* 호버 시 부드럽게 커지는 효과 */
-
-    &:hover {
-      transform: scale(1.2); /* 글자가 커짐 */
-    }
-  `;
-
   const Title = styled.div`
     display: flex;
     justify-content: space-between;
@@ -45,17 +34,33 @@ export default function DashBoard() {
     padding: 0 20px;
   `;
 
-  const BackButton = styled.a`
+  const StyledNavLink = styled(NavLink)`
     text-decoration: none;
-    background-color: #e6f3ff;
-    color: #666;
-    padding: 8px 16px;
+    color: white;
+    font-size: 2rem;
+    padding: 10px 30px;
+    background-color: #ff6b00;
     border-radius: 4px;
-    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  `;
+
+  const BackButton = styled.a`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #4a90e2;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
     transition: background-color 0.2s;
 
     &:hover {
-      background-color: #cce7ff;
+      background-color: #357abd;
     }
   `;
 
@@ -145,7 +150,9 @@ export default function DashBoard() {
     <div className="dash-board-container">
       <Title className="dash-board-title">
         <StyledNavLink to="/">관리자 페이지</StyledNavLink>
-        <BackButton href="http://modeunticket.store/">되돌아가기</BackButton>
+        <BackButton href="http://modeunticket.store/">
+          <Home size={20} />
+        </BackButton>
       </Title>
 
       <div className="main-show-container">
