@@ -38,7 +38,6 @@ const StyledNavLink = styled(NavLink)`
   color: white;
   font-size: 2rem;
   padding: 15px 50px;  // 패딩값 증가
-  background-color: #FF5B00;  // 색상 정확히 맞춤
   border-radius: 4px;
   transition: transform 0.3s ease;
 
@@ -54,19 +53,19 @@ const BackButton = styled.a`
   text-decoration: none;
   background-color: #4A90E2;
   color: white;
-  padding: 4px;
+  padding: 6px;
   border-radius: 4px;
   transition: background-color 0.2s;
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
 
   &:hover {
     background-color: #357ABD;
   }
 
   svg {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     fill: currentColor;
   }
 `;
