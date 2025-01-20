@@ -26,50 +26,50 @@ import ManagerEnrollDetail from "./ManagerEnrollDetail.js";
 export default function DashBoard() {
   // 스타일드 컴포넌트 정의
   const Title = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    padding: 0 20px;
-  `;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 0 20px;
+`;
 
-  const StyledNavLink = styled(NavLink)`
-    text-decoration: none;
-    color: white;
-    font-size: 2rem;
-    padding: 10px 30px;
-    background-color: #ff6b00;
-    border-radius: 4px;
-    transition: transform 0.3s ease;
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
+  color: white;
+  font-size: 2rem;
+  padding: 15px 50px;  // 패딩값 증가
+  background-color: #FF5B00;  // 색상 정확히 맞춤
+  border-radius: 4px;
+  transition: transform 0.3s ease;
 
-    &:hover {
-      transform: scale(1.05);
-    }
-  `;
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
 
-  const BackButton = styled.a`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    background-color: #4a90e2;
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    width: 35px;
-    height: 35px;
+const BackButton = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background-color: #4A90E2;
+  color: white;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 25px;
+  height: 25px;
 
-    &:hover {
-      background-color: #357abd;
-    }
+  &:hover {
+    background-color: #357ABD;
+  }
 
-    svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-  `;
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+`;
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
