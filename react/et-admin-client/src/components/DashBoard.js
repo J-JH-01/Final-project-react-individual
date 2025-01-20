@@ -53,7 +53,7 @@ const BackButton = styled.a`
   text-decoration: none;
   background-color: #4A90E2;
   color: white;
-  padding: 6px;
+  padding: 2px;
   border-radius: 4px;
   transition: background-color 0.2s;
   width: 35px;
