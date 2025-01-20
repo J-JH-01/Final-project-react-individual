@@ -56,8 +56,8 @@ const BackButton = styled.a`
   padding: 2px;
   border-radius: 4px;
   transition: background-color 0.2s;
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
 
   &:hover {
     background-color: #357ABD;
